@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>編集完了</title>
+    <style>
+      .header-container {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-container">
+      <h2>編集が完了しました</h2>
+    </div>
+    <p>以下の内容でユーザー情報を更新しました:</p>
+    <ul>
+      <li>姓: <span th:text="${editForm.lastName}"></span></li>
+      <li>名: <span th:text="${editForm.firstName}"></span></li>
+      <li>メールアドレス: <span th:text="${editForm.email}"></span></li>
+      <li>電話番号: <span th:text="${editForm.phone}"></span></li>
+      <li>店舗: <span th:text="${editForm.storeId}"></span></li>
+      <li>役職: <span th:text="${editForm.positionId}"></span></li>
+    </ul>
+
+    <div class="back_button">
+      <a th:href="@{/home}">戻る</a>
+    </div>
+  </body>
+</html>

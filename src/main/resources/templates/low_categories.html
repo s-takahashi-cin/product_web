@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品カテゴリ</title>
+</head>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .grid-item {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: background-color 0.3s;
+            aspect-ratio: 1 / 1; /* 正方形にする */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .grid-item:hover {
+            background-color: #ddd;
+        }
+        .grid-item a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .back_button {
+            text-align: center;
+          }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>小商品カテゴリ</h1>
+    </div>
+    <div class="grid-container">
+        <div class="grid-item" th:each="low_category : ${low_categories}">
+            <a th:href="@{'/products/' + ${low_category.id}}" th:text="${low_category.name}"></a>
+        </div>
+    </div>
+    <div class="back_button">
+        <a th:href="@{/top_categories}">戻る</a>
+    </div>
+</body>
+</html>

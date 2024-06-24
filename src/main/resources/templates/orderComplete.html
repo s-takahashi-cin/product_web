@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>注文完了</title>
+    <style>
+      .header-container {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-container">
+      <p>ご注文ありがとうございました</p>
+
+      <div class="back_button">
+        <a th:href="@{/home}">戻る</a>
+      </div>
+    </div>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", (event) => {
+        clearCart();
+      });
+
+      function clearCart() {
+        localStorage.removeItem("cart");
+        console.log("カートがクリアされました");
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>注文フォーム</title>
+    <style>
+      .header-container {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        width: 80%;
+        margin: 0 auto;
+      }
+      .container {
+        margin: 0 auto;
+        max-width: 600px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .back_button {
+        margin-top: 20px;
+        text-align: center;
+      }
+      table {
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-container">
+      <h2>注文者情報入力</h2>
+      <form th:action="@{/orderComplete}" method="post">
+        <table>
+          <tr>
+            <td>店舗</td>
+            <td>
+              <span
+                th:text="${user.storeId == 1 ? '渋谷店' : (user.storeId == 2 ? '新宿店' : (user.storeId == 3 ? '池袋店' : '未設定'))}"
+              ></span>
+              <input type="hidden" name="storeId" th:value="${user.storeId}" />
+            </td>
+          </tr>
+          <tr>
+            <td>名前</td>
+            <td th:text="${user.lastName}"></td>
+            <input type="hidden" name="lastName" th:value="${user.lastName}" />
+          </tr>
+          <tr>
+            <td>注文内容</td>
+            <td>
+              <div id="cart-items"></div>
+            </td>
+          </tr>
+          <input type="hidden" name="quantities" id="quantities" value="" />
+          <input type="hidden" name="totalAmount" id="totalAmount" value="" />
+          <input type="hidden" name="id" id="id" value="" />
+          <input type="hidden" name="name" id="name" value="" />
+          <input type="hidden" name="price" id="price" />
+        </table>
+        <input type="submit" value="注文を確定する" />
+      </form>
+    </div>
+    <div class="back_button">
+      <a th:href="@{/home}">戻る</a>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        function displayCart() {
+          var cartItemsContainer = document.getElementById("cart-items");
+          cartItemsContainer.innerHTML = "";
+          var cart = loadCart();
+          var table = document.createElement("table");
+
+          var headerRow = table.insertRow();
+          headerRow.insertCell().textContent = "商品ID";
+          headerRow.insertCell().textContent = "商品名";
+          headerRow.insertCell().textContent = "価格";
+          headerRow.insertCell().textContent = "数量";
+
+          var totalQuantity = 0;
+          var totalAmount = 0;
+
+          cart.forEach(function (item) {
+            var row = table.insertRow();
+            row.insertCell().textContent = item.id;
+            row.insertCell().textContent = item.name;
+            row.insertCell().textContent = formatPrice(item.price);
+            row.insertCell().textContent = item.quantities + "個";
+            var subtotal = item.price * item.quantities;
+            totalQuantity += item.quantities;
+            totalAmount += subtotal;
+          });
+
+          var totalRow = table.insertRow();
+          var totalCell = totalRow.insertCell();
+          totalCell.colSpan = 4;
+          totalCell.textContent = "合計金額";
+
+          totalRow.insertCell().textContent = formatPrice(totalAmount);
+
+          cartItemsContainer.appendChild(table);
+
+          var quantities = cart.map((item) => item.quantities).join(",");
+          console.log("数量:", quantities);
+
+          var productId = cart.map((item) => item.id).join(",");
+          console.log("商品ID:", productId);
+
+          document.getElementById("quantities").value = quantities;
+          document.getElementById("totalAmount").value = totalAmount;
+          document.getElementById("id").value = productId;
+          document.getElementById("name").value = cart[0].name;
+          document.getElementById("price").value = cart
+            .map((item) => item.price)
+            .join(",");
+        }
+
+        function loadCart() {
+          var cart = localStorage.getItem("cart");
+          return cart ? JSON.parse(cart) : [];
+        }
+
+        function clearCart() {
+          localStorage.removeItem("cart");
+        }
+
+        function formatPrice(price) {
+          return price.toLocaleString("ja-JP", {
+            style: "currency",
+            currency: "JPY",
+          });
+        }
+
+        displayCart();
+      });
+    </script>
+  </body>
+</html>

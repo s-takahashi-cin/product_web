@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>ユーザー情報ページ</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .header-container {
+      text-align: center;
+      margin: 50px 0;
+    }
+    .user-info-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+    .user-info {
+      background-color: #f0f0f0;
+      padding: 50px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 800px;
+    }
+    .user-info h2 {
+      text-align: center;
+    }
+    .user-info p {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    .back_button {
+      text-align: center;
+    }
+  </style>
+  <body>
+    <div class="header-container">
+      <h2 th:text="${user.lastName} + ' ' + ${user.firstName}"></h2>
+    </div>
+    <div class="user-info-container">
+      <div class="user-info">
+        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>Phone:</strong> <span th:text="${user.phone}"></span></p>
+        <p>
+          <strong>所属店舗:</strong> <span th:text="${user.storeName}"></span>
+        </p>
+        <p>
+          <strong>役職:</strong> <span th:text="${user.positionName}"></span>
+        </p>
+        <p>
+          <strong>権限:</strong>
+          <span th:text="${user.authorityName}"></span>
+        </p>
+      </div>
+    </div>
+    <div class="back_button">
+      <a th:href="@{/home}">戻る</a>
+    </div>
+  </body>
+</html>
+j

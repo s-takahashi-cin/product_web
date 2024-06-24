@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title取扱メーカー一覧</title>
+  </head>
+  <style>
+    .header-container {
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      padding: 20px;
+    }
+    .grid-item {
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      transition: background-color 0.3s;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .back_button {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+  <body>
+    <div class="header-container">
+      <h2>取扱メーカー一覧</h2>
+    </div>
+    <div class="container">
+      <div class="grid-container">
+        <div class="grid-item" th:each="manufacturer: ${manufacturers}">
+          <p th:text="${manufacturer.name}"></p>
+        </div>
+      </div>
+    </div>
+    <div class="back_button">
+      <a th:href="@{/home}">戻る</a>
+    </div>
+  </body>
+</html>
