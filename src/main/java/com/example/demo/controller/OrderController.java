@@ -52,7 +52,6 @@ public class OrderController {
         return new ArrayList<>();
     }
 
-    
     @GetMapping("/orderForm")
     public String orderForm(Model model, @ModelAttribute("cart") List<OrderDetails> cart, HttpSession session) {
         UserData user = (UserData) session.getAttribute("user");
@@ -144,16 +143,27 @@ public class OrderController {
     }
 
     @GetMapping("/order_history")
-    public String orderHistory(Model model) {
-        List<OrderForm> orders = orderFormRepo.findAll();
+    public String orderHistory(@RequestParam(name = "storeId", required = false) Long storeId, Model model) {
+        List<OrderForm> orders;
+    
+        if (storeId == null) {
+            orders = orderFormRepo.findAll();
+        } else {
+            orders = orderFormRepo.findByStoreId(storeId);
+        }
+    
+        // 注文ごとの店舗名をセットする
         for (OrderForm order : orders) {
-            Long storeId = order.getStoreId();
-            StoreData storeData = storeRepo.findById(storeId).orElse(null);
+            StoreData storeData = storeRepo.findById(order.getStoreId()).orElse(null);
             if (storeData != null) {
                 order.setStoreName(storeData.getName());
             }
         }
+    
+        // 全ての店舗情報を取得してモデルに追加する
+        List<StoreData> stores = storeRepo.findAll();
         model.addAttribute("orders", orders);
+        model.addAttribute("stores", stores);
         return "order_history";
     }
     

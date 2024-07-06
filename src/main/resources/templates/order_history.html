@@ -32,11 +32,31 @@
         margin-top: 100px;
         text-align: center;
       }
+
+      .store_options {
+        display: flex;
+        margin-left: 30px;
+      }
+
+      .margin_left {
+        margin-left: 10px;
+      }
     </style>
   </head>
   <body>
     <h2>注文履歴</h2>
-
+    <div class="store_options">
+      <form th:action="@{/order_history}" method="get">
+        <div>
+          <label for="storeSelect">店舗選択:</label>
+          <select id="storeSelect" name="storeId" onchange="this.form.submit()">
+            <option>店舗別一覧</option>
+            <option th:each="store : ${stores}" th:value="${store.id}" th:text="${store.name}"></option>
+          </select>
+        </div>
+      </form>
+      <a th:href="@{/order_history}" class="margin_left">注文履歴一覧</a>
+    </div>
     <table>
         <tr>
           <th>注文番号</th>

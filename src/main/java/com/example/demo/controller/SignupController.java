@@ -35,10 +35,13 @@ public class SignupController {
         if (bindingResult.hasErrors()) {
             return "signup";
         }
+
+        System.out.println("SignupForm データ: " + form);
         String message = userService.addUser(form);
-        if (message.equals("ユーザー登録成功しました")) {
+        if (message.equals("ユーザーアカウントが新しく登録されました")) {
         	return "redirect:/signin.html";
         } else {
+            System.out.println("ユーザー登録失敗しました " + message);
             redirectAttributes.addFlashAttribute("errorMessage", "記入に誤りがあります");
             return "signup";
         }

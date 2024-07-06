@@ -42,12 +42,16 @@ public class UserService  {
         Optional<UserData> userInfoOptional = repository.findByEmail(email);
         if (userInfoOptional.isPresent()) {
             UserData userInfo = userInfoOptional.get();
+            System.out.println("ユーザーがこちら: " + userInfo.getEmail());
             if (passwordEncoder.matches(password, userInfo.getPassword())) {
+                System.out.println("パスワードがマッチ: " + userInfo.getEmail());
                 return "Authenticated User";
             } else {
+                System.out.println("パスワードが間違ってる: " + userInfo.getEmail());
                 return "Incorrect password";
             }
         } else {
+            System.out.println("ユーザーが見つからない: " + email);
             return "User not found";
         }
     }
@@ -67,6 +71,7 @@ public class UserService  {
         userData.setPositionId(form.getPositionId());
         userData.setStoreId(form.getStoreId());
 
+        System.out.println("登録するユーザー情報: " + userData);
         repository.save(userData);
         return "ユーザー登録が成功しました";
     }
@@ -75,12 +80,15 @@ public class UserService  {
         Optional<UserData> userInfoOptional = repository.findByEmail(email);
         if (userInfoOptional.isPresent()) {
             UserData userInfo = userInfoOptional.get();
+            System.out.println("ユーザー情報: " + userInfo.getEmail());
             if (userInfo.getAuthorityId() == 1) {
                 return userInfo;
             } else {
+                System.out.println("フェッチング: " + userInfo.getId());
                 return getUserById(userInfo.getId());
             }
         }
+        System.out.println("このメールではユーザー情報が見つかりません: " + email);
         return null;
     }
     
