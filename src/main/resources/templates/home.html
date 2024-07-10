@@ -48,7 +48,10 @@
   <body>
     <body>
       <div th:if="${user != null}">
-        <p>ようこそ、<span th:text="${user.username}"></span>さん！</p>
+        <p>ようこそ、<span th:text="${user.lastName}"></span>さん！</p>
+      </div>
+      <div th:if="${user != null and user.authorityId != null}">
+        <p th:text="'ユーザーの権限ID: ' + ${user.authorityId}"></p>
       </div>
     </body>
 
@@ -60,7 +63,7 @@
         <a th:href="@{/admin_list}">従業員リスト</a>
       </div>
       <div class="grid-item">
-        <a th:href="@{/top_categories}">商品一覧</a>
+        <a th:href="@{/api/top_categories}">商品一覧</a>
       </div>
       <div class="grid-item">
         <a th:href="@{/store_info}">店舗一覧</a>

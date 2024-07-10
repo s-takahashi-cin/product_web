@@ -42,8 +42,31 @@
             text-align: center;
           }
     </style>
+    <script type="text/javascript">
+        function fetchTopCategories() {
+            console.log("fetchTopCategories 関数が実行されました");
+            fetch('/jsonSample4.json')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("データの取得に成功しました:", data);
+                    var html = '<ul>';
+                    data.forEach(category => {
+                        html += '<li>' + category.name + '</li>';
+                    });
+                    html += '</ul>';
+                    document.getElementById('topCategories').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('データの取得中にエラーが発生しました:', error);
+                })
+        }
+    </script>    
 </head>
-<body>
+<body onload="fetchTopCategories()">
+    <div id="topCategories">
+    </div>
+
+  <!--
     <div class="header-container">
         <h1>商品カテゴリ</h1>
     </div>
@@ -55,5 +78,7 @@
     <div class="back_button">
         <a th:href="@{/home}">戻る</a>
     </div>
+    <script></script>
+  -->
 </body>
 </html>

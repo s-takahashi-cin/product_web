@@ -57,10 +57,11 @@ public class SecurityConfig {
             .requestMatchers("/signup").permitAll()
             .requestMatchers("/signin").permitAll()
             .requestMatchers("/home").permitAll()
-            .requestMatchers("/products/{product_category_id}").permitAll()
-            .requestMatchers("/low_categories/{sub_category_id}").permitAll()
-            .requestMatchers("/mid_categories/{category_id}").permitAll()
-            .requestMatchers("/top_categories").permitAll()
+            .requestMatchers("/api/products/{product_category_id}").permitAll()
+            .requestMatchers("/api/low_categories/{sub_category_id}").permitAll()
+            .requestMatchers("/api/mid_categories/{category_id}").permitAll()
+            .requestMatchers("/api/top_categories").permitAll()
+            .requestMatchers("/top_categories.json").permitAll()
             .requestMatchers("/manufacturer").permitAll()
             .requestMatchers("/noItem").permitAll()
             .requestMatchers("/order_history_detail/{id}").permitAll()
@@ -74,9 +75,11 @@ public class SecurityConfig {
             .requestMatchers("/edit/{id}").permitAll()
             .requestMatchers("/editComplete").permitAll()
             .requestMatchers("/delete/{id}").permitAll()
+            .requestMatchers("/api/categories").permitAll()
             .anyRequest().authenticated()
         )
-        .authenticationProvider(authenticationProvider());
+        .authenticationProvider(authenticationProvider())
+        .csrf().disable();
         
         return http.build();
     }

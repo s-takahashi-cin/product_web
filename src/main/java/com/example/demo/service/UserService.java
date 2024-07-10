@@ -73,7 +73,9 @@ public class UserService  {
 
         System.out.println("登録するユーザー情報: " + userData);
         repository.save(userData);
-        return "ユーザー登録が成功しました";
+        String message = "ユーザーアカウントが新しく登録されました";
+        System.out.println("addUserメソッドのメッセージ: " + message);
+        return message;
     }
 
     public UserData getUserInfo(String email) {

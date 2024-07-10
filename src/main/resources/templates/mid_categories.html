@@ -47,6 +47,7 @@
     <div class="header-container">
         <h1>中商品カテゴリ</h1>
     </div>
+    
     <div class="grid-container">
         <div class="grid-item" th:each="mid_category : ${mid_categories}">
             <a th:href="@{'/low_categories/' + ${mid_category.id}}" th:text="${mid_category.name}"></a>
