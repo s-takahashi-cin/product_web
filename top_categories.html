@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>商品カテゴリ</title>
+    <script type="text/javascript">
+      function fetchTopCategories() {
+        console.log("fetchTopCategories 関数が実行されました");
+        fetch("/api/top_categories")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("データの取得に成功しました:", data);
+            var html = "<ul>";
+            data.forEach((category) => {
+              html += "<li>" + category.name + "</li>";
+            });
+            html += "</ul>";
+            document.getElementById("topCategories").innerHTML = html;
+          })
+          .catch((error) => {
+            console.error("データの取得中にエラーが発生しました:", error);
+          });
+      }
+    </script>
+  </head>
+  <body onload="fetchTopCategories()">
+    <div id="topCategories">
+      <!-- JavaScriptによってここにトップカテゴリが挿入されます -->
+    </div>
+  </body>
+</html>
