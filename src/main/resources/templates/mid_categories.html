@@ -1,62 +1,17 @@
-<!-- src/main/resources/templates/main.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>商品カテゴリ</title>
-</head>
-<style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .header-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .grid-item {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            transition: background-color 0.3s;
-            aspect-ratio: 1 / 1; /* 正方形にする */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .grid-item:hover {
-            background-color: #ddd;
-        }
-        .grid-item a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-        .back_button {
-            text-align: center;
-          }
-    </style>
-</head>
-<body>
-    <div class="header-container">
-        <h1>中商品カテゴリ</h1>
-    </div>
-    
-    <div class="grid-container">
-        <div class="grid-item" th:each="mid_category : ${mid_categories}">
-            <a th:href="@{'/low_categories/' + ${mid_category.id}}" th:text="${mid_category.name}"></a>
-        </div>
-    </div>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>中カテゴリ</title>
+    <link rel="stylesheet" type="text/css" href="/css/categories.css" />
+    <script type="text/javascript" src="/js/mid_categories.js"></script>
+  </head>
+  <body>
+    <h1>中カテゴリ</h1>
+    <div id="midCategories"></div>
+
     <div class="back_button">
-        <a th:href="@{/top_categories}">戻る</a>
+      <a th:href="@{/home}">戻る</a>
     </div>
-</body>
+  </body>
 </html>
-
-

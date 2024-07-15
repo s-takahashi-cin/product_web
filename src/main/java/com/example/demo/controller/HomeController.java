@@ -84,14 +84,6 @@ public class HomeController {
     }
     
 
-    @GetMapping("/store_info")
-    public String stores(Model model) {
-        List<StoreData> stores = storeRepo.findAll();
-        model.addAttribute("stores", stores);
-        return "store_info";
-    }
-
-
 
     @GetMapping("/manufacturer")
     public String manufacturers(Model model) {
@@ -109,4 +101,5 @@ public class HomeController {
         }
         return "redirect:/login?logout"; // ログアウト後にログインページにリダイレクト
     }
+
 }

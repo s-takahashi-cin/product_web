@@ -4,82 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>注文履歴</title>
-    <style>
-      h2 {
-        margin: 30px;
-      }
-
-      table {
-        width: 80%;
-        margin: 30px;
-        border-collapse: collapse;
-      }
-      th,
-      td {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-
-      .details {
-        display: none;
-      }
-
-      .back_button {
-        margin-top: 100px;
-        text-align: center;
-      }
-
-      .store_options {
-        display: flex;
-        margin-left: 30px;
-      }
-
-      .margin_left {
-        margin-left: 10px;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/order_history.css" />
+    <script type="text/javascript" src="/js/order_history.js" defer></script>
   </head>
   <body>
     <h2>注文履歴</h2>
     <div class="store_options">
-      <form th:action="@{/order_history}" method="get">
+      <form id="storeFilterForm">
         <div>
           <label for="storeSelect">店舗選択:</label>
-          <select id="storeSelect" name="storeId" onchange="this.form.submit()">
-            <option>店舗別一覧</option>
-            <option th:each="store : ${stores}" th:value="${store.id}" th:text="${store.name}"></option>
+          <select id="storeSelect" name="storeId">
+            <option value="">店舗別一覧</option>
           </select>
         </div>
       </form>
-      <a th:href="@{/order_history}" class="margin_left">注文履歴一覧</a>
+      <a href="#" id="allOrdersLink" class="margin_left">注文履歴一覧</a>
     </div>
-    <table>
-        <tr>
-          <th>注文番号</th>
-          <th>店舗名</th>
-          <th>合計金額</th>
-          <th>注文日時</th>
-          <th>名前</th>
-          <th>詳細</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="order : ${orders}">
-          <td th:text="${order.id}"></td>
-          <td th:text="${order.storeName}"></td>
-          <td th:text="${order.totalAmount + '円'}"></td>
-          <td th:text="${order.createdAt}"></td>
-          <td th:text="${order.lastName}"></td>
-          <td>
-              <a th:href="@{/order_history_detail/{id}(id=${order.id})}">詳細を表示</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="order-history-container" id="order-history-container">
+      <!-- JavaScriptで動的に注文履歴情報を挿入 -->
+    </div>
     <div class="back_button">
       <a th:href="@{/home}">戻る</a>
     </div>

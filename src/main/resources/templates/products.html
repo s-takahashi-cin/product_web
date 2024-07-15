@@ -2,261 +2,53 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>商品一覧</title>
-    <style>
-      .header-container {
-        text-align: center;
-      }
-      .container {
-        display: flex;
-        justify-content: center;
-      }
-      .grid-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        padding: 20px;
-      }
-      .grid-item {
-        border: 1px solid #ccc;
-        padding: 10px;
-      }
-      .back_button {
-        text-align: center;
-        margin-top: 20px;
-      }
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-        padding-top: 60px;
-      }
-      .modal-content {
-        background-color: #fefefe;
-        margin: 5% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-      }
-      .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-      }
-      .close:hover,
-      .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-      }
-      .modal-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-      }
-      .cart-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: #f39c12;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-      }
-      .remove-item-button {
-        color: red;
-        cursor: pointer;
-        margin-left: 10px;
-      }
-    </style>
+    <title>商品情報</title>
+    <link rel="stylesheet" type="text/css" href="/css/products.css" />
+    <script type="text/javascript" src="/js/products.js"></script>
   </head>
   <body>
-    <div class="header-container">
-      <h1>商品一覧</h1>
-      <button class="cart-button" id="cart-button">カート (0)</button>
-    </div>
-    <div class="container">
-      <div class="grid-container">
-        <div class="grid-item" th:each="product: ${products}">
-          <p th:text="${product.name}"></p>
-          <p th:text="${product.body}"></p>
-          <p
-            th:text="${productPrices[product.id]} + '円'"
-            class="product-price"
-          ></p>
-          <button
-            class="add-to-cart-button"
-            th:data-product-id="${product.id}"
-            th:data-product-name="${product.name}"
-            th:data-product-price="${productPrices[product.id]}"
-          >
-            カートに追加
-          </button>
-        </div>
+    <h1>商品情報</h1>
+
+    <!-- カートのアイテム数表示 -->
+    <div id="cartItemCount">0</div>
+
+    <!-- 商品一覧表示エリア -->
+    <div id="products" class="grid-container">
+      <div th:each="product : ${products}" class="grid-item">
+        <h3 th:text="${product.name}">商品名</h3>
+        <p th:text="${product.body}">商品説明</p>
+        <p th:text="${productPrices[product.id]}">価格</p>
+        <button
+          th:attr="data-id=${product.id}, data-name=${product.name}, data-price=${productPrices[product.id]}"
+          onclick="openModal(this)"
+        >
+          カートに追加
+        </button>
       </div>
     </div>
+    <button id="resetCartButton">カートをリセット</button>
     <div class="back_button">
-      <a th:href="@{/top_categories}">戻る</a>
+      <a th:href="@{/home}">戻る</a>
     </div>
-    <div class="back_button">
-      <a th:href="@{/home}">ホーム</a>
-    </div>
+    <!-- モーダル -->
     <div id="myModal" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>カートに商品を追加しますか？</p>
-        <div class="modal-buttons">
-          <button id="modal-yes">はい</button>
-          <button id="modal-no">いいえ</button>
-        </div>
+        <div id="modalProductDetails">商品をカートに追加しますか？</div>
+        <button id="confirmAddToCart">はい</button>
+        <button class="close-modal">いいえ</button>
       </div>
     </div>
-    <div id="cartModal" class="modal">
+
+    <!-- カート内の商品一覧と合計金額表示モーダル -->
+    <div id="cartDetailsModal" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>カートの中身</h2>
-        <div id="cart-items"></div>
-        <div id="cart-total"></div>
-        <div class="modal-buttons">
-          <button id="checkout">注文する</button>
-        </div>
+        <span class="close-cart">&times;</span>
+        <div id="cartItemList"></div>
+        <p id="totalPrice"></p>
+        <p id="totalQuantity"></p>
+        <a id="checkoutButton" th:href="@{/orderForm}">注文ページへ移動</a>
+        <button class="close-cart">戻る</button>
       </div>
     </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var myModal = document.getElementById("myModal");
-        var cartModal = document.getElementById("cartModal");
-        var spanCloseButtons = document.getElementsByClassName("close");
-        var modalYesButton = document.getElementById("modal-yes");
-        var modalNoButton = document.getElementById("modal-no");
-        var cartButton = document.getElementById("cart-button");
-        var checkoutButton = document.getElementById("checkout");
-        var cartItemsContainer = document.getElementById("cart-items");
-
-        var selectedProductId;
-        var selectedProductName;
-        var selectedProductPrice;
-        var cart = loadCart();
-
-        document
-          .querySelectorAll(".add-to-cart-button")
-          .forEach(function (button) {
-            button.onclick = function () {
-              selectedProductId = this.getAttribute("data-product-id");
-              selectedProductName = this.getAttribute("data-product-name");
-              selectedProductPrice = parseFloat(
-                this.getAttribute("data-product-price")
-              );
-              myModal.style.display = "block";
-            };
-          });
-
-        Array.from(spanCloseButtons).forEach(function (span) {
-          span.onclick = function () {
-            myModal.style.display = "none";
-            cartModal.style.display = "none";
-          };
-        });
-
-        modalNoButton.onclick = function () {
-          myModal.style.display = "none";
-        };
-
-        modalYesButton.onclick = function () {
-          myModal.style.display = "none";
-          addToCart(
-            selectedProductId,
-            selectedProductName,
-            selectedProductPrice
-          );
-        };
-
-        cartButton.onclick = function () {
-          displayCart();
-          cartModal.style.display = "block";
-        };
-
-        checkoutButton.onclick = function () {
-          window.location.href = "/orderForm";
-        };
-
-        function addToCart(productId, productName, productPrice) {
-          var existingProduct = cart.find(function (item) {
-            return item.id === productId;
-          });
-          if (existingProduct) {
-            existingProduct.quantities += 1;
-          } else {
-            cart.push({
-              id: productId,
-              name: productName,
-              price: productPrice,
-              quantities: 1,
-            });
-          }
-          saveCart(cart);
-          updateCartButton();
-        }
-
-        function displayCart() {
-          cartItemsContainer.innerHTML = "";
-          cart.forEach(function (item, index) {
-            var cartItem = document.createElement("div");
-            cartItem.textContent =
-              item.name + " - " + item.price + "円 x " + item.quantities;
-            var removeButton = document.createElement("button");
-            removeButton.textContent = "削除";
-            removeButton.classList.add("remove-item-button");
-            removeButton.onclick = function () {
-              removeFromCart(index);
-            };
-            cartItem.appendChild(removeButton);
-            cartItemsContainer.appendChild(cartItem);
-          });
-          var total = calculateCartTotal();
-          document.getElementById("cart-total").textContent =
-            "合計: " + total + "円";
-        }
-
-        function removeFromCart(index) {
-          cart.splice(index, 1);
-          saveCart(cart);
-          displayCart();
-          updateCartButton();
-        }
-
-        function calculateCartTotal() {
-          return cart.reduce(function (total, item) {
-            return total + item.price * item.quantities;
-          }, 0);
-        }
-
-        function updateCartButton() {
-          var totalItems = cart.reduce(function (sum, item) {
-            return sum + item.quantities;
-          }, 0);
-          cartButton.textContent = "カート (" + totalItems + ")";
-        }
-
-        function saveCart(cart) {
-          localStorage.setItem("cart", JSON.stringify(cart));
-        }
-
-        function loadCart() {
-          var savedCart = localStorage.getItem("cart");
-          return savedCart ? JSON.parse(savedCart) : [];
-        }
-
-        updateCartButton();
-      });
-    </script>
   </body>
 </html>

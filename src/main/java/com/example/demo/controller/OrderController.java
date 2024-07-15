@@ -2,40 +2,29 @@ package com.example.demo.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.demo.entity.OrderDetails;
 import com.example.demo.entity.Products;
-import com.example.demo.entity.StoreData;
 import com.example.demo.entity.UserData;
 import com.example.demo.form.OrderForm;
 import com.example.demo.repo.OrderDetailRepo;
 import com.example.demo.repo.OrderFormRepo;
 import com.example.demo.repo.ProductRepo;
-import com.example.demo.repo.StoreRepo;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
-@RestController
+@Controller
 @SessionAttributes("cart")
 public class OrderController {
 
@@ -48,16 +37,13 @@ public class OrderController {
     @Autowired
     private ProductRepo productRepo;
 
-    @Autowired
-    private StoreRepo storeRepo;
-
     @ModelAttribute("cart")
     public List<OrderDetails> createCart() {
         return new ArrayList<>();
     }
-
+    
     @GetMapping("/orderForm")
-    public String orderForm(Model model, @ModelAttribute("cart") List<OrderDetails> cart, HttpSession session) {
+    public String orderForm(Model model, HttpSession session) {
         UserData user = (UserData) session.getAttribute("user");
         if (user != null) {
             model.addAttribute("user", user);
@@ -66,10 +52,16 @@ public class OrderController {
             System.out.println("ユーザーがログインしていません。");
             return "redirect:/login";
         }
+    
+        // セッションからカートのデータを取得
+        List<OrderDetails> cart = (List<OrderDetails>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>(); // カートが null の場合、空のリストを作成
+        }
         model.addAttribute("cart", cart);
+        System.out.println("カート情報: " + cart);
         return "orderForm";
     }
-
 
     @Transactional
     @PostMapping("/orderComplete")
@@ -146,81 +138,4 @@ public class OrderController {
         return "orderComplete";
     }
 
-
-    @GetMapping("/order_history")
-    public ResponseEntity<?> orderHistory(@RequestParam(name = "storeId", required = false) Long storeId, HttpSession session) {
-        UserData user = (UserData) session.getAttribute("user");
-        if (user == null) {
-            return ResponseEntity.status(401).body("ユーザーがログインしていません。");
-        }
-
-        // 注文データを取得
-        List<OrderForm> orders;
-        if (storeId == null) {
-            orders = orderFormRepo.findAll();
-        } else {
-            orders = orderFormRepo.findByStoreId(storeId);
-        }
-
-        // レスポンスに含める注文情報のリスト
-        List<Map<String, Object>> orderDetails = new ArrayList<>();
-        for (OrderForm order : orders) {
-            Map<String, Object> orderDetail = new HashMap<>();
-            orderDetail.put("orderId", order.getId());
-            orderDetail.put("storeName", storeRepo.findById(order.getStoreId()).map(StoreData::getName).orElse(null));
-            orderDetail.put("totalAmount", order.getTotalAmount());
-            orderDetail.put("createdAt", order.getCreatedAt());
-            orderDetail.put("userName", user.getLastName()); // ユーザー名を追加する場合
-
-            orderDetails.add(orderDetail);
-        }
-
-        // レスポンスの構築
-        Map<String, Object> response = new HashMap<>();
-        response.put("userId", user.getId());
-        response.put("userName", user.getLastName()); // ユーザー名を追加する場合
-        response.put("orders", orderDetails);
-
-        return ResponseEntity.ok(response);
-    }
-
-    // HTMLに表示する
-    // @GetMapping("/order_history")
-    // public String orderHistory(@RequestParam(name = "storeId", required = false) Long storeId, Model model) {
-    //     List<OrderForm> orders;
-    
-    //     if (storeId == null) {
-    //         orders = orderFormRepo.findAll();
-    //     } else {
-    //         orders = orderFormRepo.findByStoreId(storeId);
-    //     }
-    
-    //     // 注文ごとの店舗名をセットする
-    //     for (OrderForm order : orders) {
-    //         StoreData storeData = storeRepo.findById(order.getStoreId()).orElse(null);
-    //         if (storeData != null) {
-    //             order.setStoreName(storeData.getName());
-    //         }
-    //     }
-    
-    //     // 全ての店舗情報を取得してモデルに追加する
-    //     List<StoreData> stores = storeRepo.findAll();
-    //     model.addAttribute("orders", orders);
-    //     model.addAttribute("stores", stores);
-    //     return "order_history";
-    // }
-    
-    @GetMapping("/order_history_detail/{id}")
-    public String orderDetail(@PathVariable("id") Long id, Model model) {
-        Optional<OrderForm> orderDataOptional = orderFormRepo.findById(id);
-        if (orderDataOptional.isPresent()) {
-            OrderForm orderDetail = orderDataOptional.get();
-            model.addAttribute("orderDetail", orderDetail);
-            return "order_history_detail";
-        } else {
-            System.err.println("Order not found for ID: " + id);
-            return "order_not_found";
-        }
-    }
-    
 }

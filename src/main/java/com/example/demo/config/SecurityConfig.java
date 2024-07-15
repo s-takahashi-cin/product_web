@@ -57,19 +57,25 @@ public class SecurityConfig {
             .requestMatchers("/signup").permitAll()
             .requestMatchers("/signin").permitAll()
             .requestMatchers("/home").permitAll()
-            .requestMatchers("/api/products/{product_category_id}").permitAll()
-            .requestMatchers("/api/low_categories/{sub_category_id}").permitAll()
-            .requestMatchers("/api/mid_categories/{category_id}").permitAll()
-            .requestMatchers("/api/top_categories").permitAll()
-            .requestMatchers("/top_categories.json").permitAll()
+            .requestMatchers("/products/{product_category_id}").permitAll()
+            .requestMatchers("/products_page/**").permitAll()
+            .requestMatchers("/low_categories/{sub_category_id}").permitAll()
+            .requestMatchers("/low_categories_page/**").permitAll()
+            .requestMatchers("/mid_categories/{category_id}").permitAll()
+            .requestMatchers("/mid_categories_page/**").permitAll()
+            .requestMatchers("/top_categories").permitAll()
+            .requestMatchers("/top_categories_page").permitAll()
             .requestMatchers("/manufacturer").permitAll()
             .requestMatchers("/noItem").permitAll()
             .requestMatchers("/order_history_detail/{id}").permitAll()
+            .requestMatchers("/order_history_page").permitAll()
             .requestMatchers("/order_history").permitAll()
             .requestMatchers("/orderComplete").permitAll()
+            .requestMatchers("/orderForm.html").permitAll()
             .requestMatchers("/orderForm").permitAll()
-            .requestMatchers("/products").permitAll()
+            .requestMatchers("/orderFormPage").permitAll()
             .requestMatchers("/store_info").permitAll()
+            .requestMatchers("/store_info_page").permitAll()
             .requestMatchers("/user_info/{id}").permitAll()
             .requestMatchers("/admin_list").permitAll()
             .requestMatchers("/edit/{id}").permitAll()
@@ -78,8 +84,8 @@ public class SecurityConfig {
             .requestMatchers("/api/categories").permitAll()
             .anyRequest().authenticated()
         )
-        .authenticationProvider(authenticationProvider())
-        .csrf().disable();
+        .authenticationProvider(authenticationProvider());
+        // .csrf().disable();
         
         return http.build();
     }

@@ -3,40 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>注文フォーム</title>
-    <style>
-      .header-container {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        width: 80%;
-        margin: 0 auto;
-      }
-      .container {
-        margin: 0 auto;
-        max-width: 600px;
-      }
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        border: 1px solid #ddd;
-      }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-      .back_button {
-        margin-top: 20px;
-        text-align: center;
-      }
-      table {
-        margin: 40px 0;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/orderForm.css" />
   </head>
   <body>
     <div class="header-container">
@@ -61,6 +28,8 @@
             <td>注文内容</td>
             <td>
               <div id="cart-items"></div>
+              <div id="total-quantity"></div>
+              <div id="total-amount"></div>
             </td>
           </tr>
           <input type="hidden" name="quantities" id="quantities" value="" />
@@ -79,10 +48,14 @@
       document.addEventListener("DOMContentLoaded", function () {
         function displayCart() {
           var cartItemsContainer = document.getElementById("cart-items");
+          var totalQuantityElem = document.getElementById("total-quantity");
+          var totalAmountElem = document.getElementById("total-amount");
+
           cartItemsContainer.innerHTML = "";
           var cart = loadCart();
           var table = document.createElement("table");
 
+          // テーブルのヘッダー行を追加
           var headerRow = table.insertRow();
           headerRow.insertCell().textContent = "商品ID";
           headerRow.insertCell().textContent = "商品名";
@@ -92,36 +65,38 @@
           var totalQuantity = 0;
           var totalAmount = 0;
 
+          // カートのアイテムをテーブルに追加
           cart.forEach(function (item) {
             var row = table.insertRow();
-            row.insertCell().textContent = item.id;
-            row.insertCell().textContent = item.name;
-            row.insertCell().textContent = formatPrice(item.price);
-            row.insertCell().textContent = item.quantities + "個";
-            var subtotal = item.price * item.quantities;
-            totalQuantity += item.quantities;
+            row.insertCell().textContent = item.id; // 修正したフィールド名
+            row.insertCell().textContent = item.name; // 修正したフィールド名
+            row.insertCell().textContent = formatPrice(item.price); // 修正したフィールド名
+            row.insertCell().textContent = item.quantity + "個"; // 修正したフィールド名
+            var subtotal = item.price * item.quantity; // 修正したフィールド名
+            totalQuantity += item.quantity;
             totalAmount += subtotal;
           });
 
+          // 合計行を追加
           var totalRow = table.insertRow();
           var totalCell = totalRow.insertCell();
           totalCell.colSpan = 4;
           totalCell.textContent = "合計金額";
-
           totalRow.insertCell().textContent = formatPrice(totalAmount);
 
           cartItemsContainer.appendChild(table);
 
-          var quantities = cart.map((item) => item.quantities).join(",");
-          console.log("数量:", quantities);
-
-          var productId = cart.map((item) => item.id).join(",");
-          console.log("商品ID:", productId);
-
-          document.getElementById("quantities").value = quantities;
+          // Hidden フィールドの値を設定
+          document.getElementById("quantities").value = cart
+            .map((item) => item.quantity)
+            .join(",");
           document.getElementById("totalAmount").value = totalAmount;
-          document.getElementById("id").value = productId;
-          document.getElementById("name").value = cart[0].name;
+          document.getElementById("id").value = cart
+            .map((item) => item.id)
+            .join(",");
+          document.getElementById("name").value = cart
+            .map((item) => item.name)
+            .join(",");
           document.getElementById("price").value = cart
             .map((item) => item.price)
             .join(",");
@@ -129,7 +104,28 @@
 
         function loadCart() {
           var cart = localStorage.getItem("cart");
-          return cart ? JSON.parse(cart) : [];
+          if (cart) {
+            try {
+              var parsedCart = JSON.parse(cart);
+              console.log("カートの内容を表示します:", parsedCart);
+              parsedCart.forEach((item) => {
+                if (
+                  typeof item.productPrice !== "number" ||
+                  isNaN(item.price)
+                ) {
+                  console.error("無効な価格:", item.price);
+                  item.productPrice = 0;
+                }
+              });
+              return parsedCart;
+            } catch (e) {
+              console.error("カートの内容の解析エラー:", e);
+              return [];
+            }
+          } else {
+            console.log("カートが空です");
+            return [];
+          }
         }
 
         function clearCart() {
