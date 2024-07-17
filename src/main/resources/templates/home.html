@@ -1,0 +1,83 @@
+<!-- src/main/resources/templates/main.html -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>管理者ページ</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .header-container {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+      .grid-item {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        transition: background-color 0.3s;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .grid-item:hover {
+        background-color: #ddd;
+      }
+      .grid-item a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      .welcome {
+        text-align: center;
+      }
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <body>
+      <div th:if="${user != null}">
+        <p>ようこそ、<span th:text="${user.lastName}"></span>さん！</p>
+      </div>
+      <div th:if="${user != null and user.authorityId != null}">
+        <p th:text="'ユーザーの権限ID: ' + ${user.authorityId}"></p>
+      </div>
+    </body>
+
+    <div class="grid-container">
+      <div class="grid-item" th:if="${user}">
+        <a th:href="@{'/user_info/' + ${user.id}}">ユーザー情報</a>
+      </div>
+      <div class="grid-item" th:if="${user.authorityId == 1}">
+        <a th:href="@{/admin_list}">従業員リスト</a>
+      </div>
+      <div class="grid-item">
+        <a th:href="@{/top_categories_page}">商品一覧</a>
+      </div>
+      <div class="grid-item">
+        <a th:href="@{/store_info_page}">店舗一覧</a>
+      </div>
+      <div class="grid-item">
+        <a th:href="@{/manufacturer}">取り扱いメーカー</a>
+      </div>
+      <div class="grid-item">
+        <a th:href="@{/order_history_page}">注文履歴</a>
+      </div>
+    </div>
+
+    <form th:action="@{/logout}" method="post">
+      <input type="submit" value="ログアウトする" />
+    </form>
+  </body>
+</html>

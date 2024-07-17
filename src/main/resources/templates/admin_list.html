@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>従業員管理ページ</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .header-container {
+      text-align: center;
+      margin: 50px 0;
+    }
+    .user-info-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+    .user-info {
+      background-color: #f0f0f0;
+      padding: 50px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 800px;
+    }
+    .user-info h2 {
+      text-align: center;
+    }
+    .user-info p {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    .back_button {
+      text-align: center;
+    }
+  </style>
+  <body>
+    <div class="header-container">従業員リスト</div>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>名</th>
+          <th>姓</th>
+          <th>メールアドレス</th>
+          <th>電話番号</th>
+          <th>店舗</th>
+          <th>役職</th>
+          <th>権限</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="user : ${users}">
+          <td th:text="${user.id}"></td>
+          <td th:text="${user.lastName}"></td>
+          <td th:text="${user.firstName}"></td>
+          <td th:text="${user.email}"></td>
+          <td th:text="${user.phone}"></td>
+          <td th:text="${user.storeName}"></td>
+          <td th:text="${user.positionName}"></td>
+          <td th:text="${user.authorityName}"></td>
+          <td>
+            <a th:href="@{/edit/{id}(id=${user.id})}">編集</a>
+            <a
+              th:href="@{/delete/{id}(id=${user.id})}"
+              onclick="return confirm('本当に削除しますか？')"
+              >削除</a
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="back_button">
+      <a th:href="@{/home}">戻る</a>
+    </div>
+  </body>
+</html>

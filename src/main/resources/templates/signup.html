@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>新規登録</title>
+  </head>
+  <style>
+    .errMsg {
+      color: red;
+    }
+  </style>
+  <body>
+    <h2>新規登録</h2>
+    <span th:text="${errorMessage}" class="errMsg"></span>
+    <form th:action="@{/signup}" method="post" th:object="${signupForm}">
+      <div>
+        <label>姓</label>
+        <input type="text" th:field="*{lastName}" />
+        <span
+          th:if="${#fields.hasErrors('lastName')}"
+          th:errors="*{lastName}"
+          class="errMsg"
+        ></span>
+      </div>
+      <div>
+        <label>名</label>
+        <input type="text" th:field="*{firstName}" />
+        <span
+          th:if="${#fields.hasErrors('firstName')}"
+          th:errors="*{firstName}"
+          class="errMsg"
+        ></span>
+      </div>
+      <div>
+        <label>メールアドレス</label>
+        <input type="text" th:field="*{email}" />
+        <span
+          th:if="${#fields.hasErrors('email')}"
+          th:errors="*{email}"
+          class="errMsg"
+        ></span>
+      </div>
+      <div>
+        <label>パスワード</label>
+        <input type="password" th:field="*{password}" />
+        <span
+          th:if="${#fields.hasErrors('password')}"
+          th:errors="*{password}"
+          class="errMsg"
+        ></span>
+      </div>
+      <div>
+        <label>店舗</label>
+        <select th:field="*{storeId}">
+          <option value="" th:selected="${signupForm.storeId == null}">
+            選択する
+          </option>
+          <option value="1">渋谷店</option>
+          <option value="2">新宿店</option>
+          <option value="3">池袋店</option>
+        </select>
+        <span
+          th:if="${#fields.hasErrors('storeId')}"
+          th:errors="*{storeId}"
+          class="errMsg"
+        ></span>
+      </div>
+      <div>
+        <label>権限</label>
+        <select th:field="*{authorityId}">
+          <option value="" th:selected="${signupForm.authorityId == null}">
+            選択する
+          </option>
+          <option value="1">管理者</option>
+          <option value="2">一般</option>
+        </select>
+        <span
+          th:if="${#fields.hasErrors('authorityId')}"
+          th:errors="*{authorityId}"
+          class="errMsg"
+        ></span>
+      </div>
+      <div>
+        <label>ポジション</label>
+        <select th:field="*{positionId}">
+          <option value="" th:selected="${signupForm.positionId == null}">
+            選択する
+          </option>
+          <option value="1">店長</option>
+          <option value="2">副店長</option>
+          <option value="3">マネージャー</option>
+          <option value="4">一般従業員</option>
+          <option value="5">パート・アルバイト</option>
+        </select>
+        <span
+          th:if="${#fields.hasErrors('positionId')}"
+          th:errors="*{positionId}"
+          class="errMsg"
+        ></span>
+      </div>
+
+      <div>
+        <input type="submit" value="登録する" />
+      </div>
+    </form>
+    <a th:href="@{/signin}">ログインはこちら</a>
+  </body>
+</html>

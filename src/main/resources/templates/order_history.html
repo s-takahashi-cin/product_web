@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注文履歴</title>
+    <link rel="stylesheet" type="text/css" href="/css/order_history.css" />
+    <script type="text/javascript" src="/js/order_history.js" defer></script>
+  </head>
+  <body>
+    <h2>注文履歴</h2>
+    <div class="store_options">
+      <form id="storeFilterForm">
+        <div>
+          <label for="storeSelect">店舗選択:</label>
+          <select id="storeSelect" name="storeId">
+            <option value="">店舗別一覧</option>
+          </select>
+        </div>
+      </form>
+      <a href="#" id="allOrdersLink" class="margin_left">注文履歴一覧</a>
+    </div>
+    <div class="order-history-container" id="order-history-container">
+      <!-- JavaScriptで動的に注文履歴情報を挿入 -->
+    </div>
+    <div class="back_button">
+      <a th:href="@{/home}">戻る</a>
+    </div>
+  </body>
+</html>

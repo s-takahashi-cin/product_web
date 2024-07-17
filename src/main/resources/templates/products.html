@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>商品情報</title>
+    <link rel="stylesheet" type="text/css" href="/css/products.css" />
+    <script type="text/javascript" src="/js/products.js"></script>
+  </head>
+  <body>
+    <h1>商品情報</h1>
+
+    <!-- カートのアイテム数表示 -->
+    <div id="cartItemCount">0</div>
+
+    <!-- 商品一覧表示エリア -->
+    <div id="products" class="grid-container">
+      <div th:each="product : ${products}" class="grid-item">
+        <h3 th:text="${product.name}">商品名</h3>
+        <p th:text="${product.body}">商品説明</p>
+        <p th:text="${productPrices[product.id]}">価格</p>
+        <button
+          th:attr="data-id=${product.id}, data-name=${product.name}, data-price=${productPrices[product.id]}"
+          onclick="openModal(this)"
+        >
+          カートに追加
+        </button>
+      </div>
+    </div>
+    <button id="resetCartButton">カートをリセット</button>
+    <div class="back_button">
+      <a th:href="@{/home}">戻る</a>
+    </div>
+    <!-- モーダル -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div id="modalProductDetails">商品をカートに追加しますか？</div>
+        <button id="confirmAddToCart">はい</button>
+        <button class="close-modal">いいえ</button>
+      </div>
+    </div>
+
+    <!-- カート内の商品一覧と合計金額表示モーダル -->
+    <div id="cartDetailsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-cart">&times;</span>
+        <div id="cartItemList"></div>
+        <p id="totalPrice"></p>
+        <p id="totalQuantity"></p>
+        <a id="checkoutButton" th:href="@{/orderForm}">注文ページへ移動</a>
+        <button class="close-cart">戻る</button>
+      </div>
+    </div>
+  </body>
+</html>

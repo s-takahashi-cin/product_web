@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注文詳細</title>
+    <style>
+      h2 {
+        margin: 30px;
+      }
+
+      .order-history-detail {
+        margin: 30px;
+        padding: 20px;
+        border: 1px solid #dddddd;
+        background-color: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .order-item {
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid #dddddd;
+      }
+
+      .order-item:first-of-type {
+        border-top: none;
+      }
+
+      .total-amount {
+        margin-top: auto;
+        text-align: right;
+      }
+
+      .back_button {
+        text-align: center;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>注文詳細</h2>
+
+    <div class="order-history-detail">
+      <p>
+        <strong>注文ID:</strong>
+        <span th:text="${orderDetail.id}"></span>
+      </p>
+      <p>
+        <strong>注文者:</strong> <span th:text="${orderDetail.lastName}"></span>
+      </p>
+      <div>
+        <strong>商品名と数量、商品価格:</strong>
+        <ul>
+          <li th:each="detail : ${orderDetail.orderDetails}" class="order-item">
+            <span th:text="${detail.name}"></span> ×
+            <span th:text="${detail.quantity}"></span>
+            <p>　　<span th:text="${detail.price}"></span>円</p>
+          </li>
+        </ul>
+      </div>
+      <p class="total-amount">
+        <strong>合計金額:</strong>
+        <span th:text="${orderDetail.totalAmount}"></span>円
+      </p>
+    </div>
+
+    <div class="back_button">
+      <a th:href="@{/order_history_page}">戻る</a>
+    </div>
+  </body>
+</html>

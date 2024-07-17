@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>商品がありません</title>
+    <style>
+      .header-container {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-container">
+      <p>Error</p>
+      <p>お探しの商品は見つかりませんでした。</p>
+
+      <div class="back_button">
+        <a th:href="@{/home}">戻る</a>
+      </div>
+    </div>
+  </body>
+</html>
