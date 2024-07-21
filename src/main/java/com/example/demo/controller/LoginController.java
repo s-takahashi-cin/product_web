@@ -25,7 +25,6 @@ public class LoginController {
     }
     @GetMapping("/signin")
     public String showSigninForm(Model model) {
-        // System.out.println("サインインする");
         model.addAttribute("loginForm", new LoginForm());
         return "signin";
     }

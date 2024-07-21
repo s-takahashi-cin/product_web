@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -105,22 +104,16 @@ public class ProductController {
 
     @GetMapping("/products/{product_category_id}")
     public ResponseEntity<?> products(@PathVariable("product_category_id") Long productCategoryId, HttpSession session) {
-        System.out.println("商品ページの小カテゴリID: " + productCategoryId);
     
         UserData user = (UserData) session.getAttribute("user");
         if (user != null) {
-            // ログインユーザーの情報を表示
-            System.out.println("商品ページにログインしているユーザー: " + user.getUsername());
-    
             // ユーザーのstore_idを取得
             Long userStoreId = user.getStoreId();
             Long storeId = userStoreId;
-            System.out.println("使用する店舗ID: " + storeId);
     
             StoreData storeData = storeRepo.getStoreDataById(storeId);
     
             List<Products> products = productRepo.findByProductCategoryId(productCategoryId);
-            System.out.println("取得した商品リスト: " + products);
             if (products.isEmpty()) {
                 return ResponseEntity.status(400).body("商品が見つかりませんでした。");
             }
@@ -129,7 +122,6 @@ public class ProductController {
             for (Products product : products) {
                 ProductStorePrice storePrice = productStoreRepo.findByProductAndStoreData(product, storeData);
                 if (storePrice != null) {
-                    System.out.println("店舗ごとの値段: " + storePrice.getPrice());
                     productPrices.put(product.getId(), storePrice.getPrice());
                 } else {
                     productPrices.put(product.getId(), product.getRetailPrice()); // 価格が見つからない場合は標準価格を使用
@@ -143,7 +135,6 @@ public class ProductController {
                 productDetail.put("productName", product.getName());
                 productDetail.put("productBody", product.getBody());
                 Double price = productPrices.get(product.getId()); // 価格を取得
-                System.out.println("商品ID: " + product.getId() + " の価格: " + price);
                 productDetail.put("price", price);
                 productDetails.add(productDetail);
             }
@@ -154,7 +145,6 @@ public class ProductController {
             return ResponseEntity.ok(response);
         } else {
             // ユーザーがログインしていない場合の処理
-            System.out.println("ユーザーがログインしていません。");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ログインが必要です。");
         }
     }

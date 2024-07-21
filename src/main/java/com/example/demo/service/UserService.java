@@ -70,11 +70,8 @@ public class UserService  {
         userData.setAuthorityId(form.getAuthorityId());
         userData.setPositionId(form.getPositionId());
         userData.setStoreId(form.getStoreId());
-
-        System.out.println("登録するユーザー情報: " + userData);
         repository.save(userData);
         String message = "ユーザーアカウントが新しく登録されました";
-        System.out.println("addUserメソッドのメッセージ: " + message);
         return message;
     }
 
