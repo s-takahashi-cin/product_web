@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <title>新規登録</title>
@@ -11,7 +11,11 @@
   </style>
   <body>
     <h2>新規登録</h2>
-    <span th:text="${errorMessage}" class="errMsg"></span>
+    <span
+      th:if="${errorMessage}"
+      th:text="${errorMessage}"
+      class="errMsg"
+    ></span>
     <form th:action="@{/signup}" method="post" th:object="${signupForm}">
       <div>
         <label>姓</label>

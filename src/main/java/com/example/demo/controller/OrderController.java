@@ -47,9 +47,7 @@ public class OrderController {
         UserData user = (UserData) session.getAttribute("user");
         if (user != null) {
             model.addAttribute("user", user);
-            System.out.println("カートにログインしているユーザー: " + user.getUsername());
         } else {
-            System.out.println("ユーザーがログインしていません。");
             return "redirect:/login";
         }
     
@@ -59,7 +57,6 @@ public class OrderController {
             cart = new ArrayList<>(); // カートが null の場合、空のリストを作成
         }
         model.addAttribute("cart", cart);
-        System.out.println("カート情報: " + cart);
         return "orderForm";
     }
 
@@ -93,13 +90,11 @@ public class OrderController {
         for (int i = 0; i < productIdArray.length; i++) {
             Long productId;
             if (productIdArray[i].trim().isEmpty()) {
-                System.err.println("Skipping empty product ID at index " + i);
                 continue;
             }
             try {
                 productId = Long.parseLong(productIdArray[i].trim());
             } catch (NumberFormatException e) {
-                System.err.println("Invalid product ID: " + productIdArray[i]);
                 continue;
             }
             Integer quantity = quantities.get(i);
@@ -123,13 +118,11 @@ public class OrderController {
                 try {
                     orderDetailRepo.save(orderDetails);
                 } catch (Exception e) {
-                    System.err.println("Failed to save orderDetails: " + e.getMessage());
                     e.printStackTrace();
                 }
                 
                 orderDetailsList.add(orderDetails);
             } else {
-                System.err.println("Product not found for ID: " + productId);
             }
         }
 

@@ -33,20 +33,18 @@ public class SignupController {
     @PostMapping("/signup")
     public String signup(@Valid @ModelAttribute SignupForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "signup";
-        }
-
-        System.out.println("SignupForm データ: " + form);
-        String message = userService.addUser(form);
-        if (message.equals("ユーザーアカウントが新しく登録されました")) {
-        	return "redirect:/signin.html";
-        } else {
-            System.out.println("ユーザー登録失敗しました " + message);
             redirectAttributes.addFlashAttribute("errorMessage", "記入に誤りがあります");
-            return "signup";
+            return "redirect:/signup";
+        }
+        String message = userService.addUser(form);
+
+        if ("ユーザーアカウントが新しく登録されました".equals(message)) {
+            redirectAttributes.addFlashAttribute("successMessage", "サインアップ成功しました");
+            return "redirect:/signin";
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "記入に誤りがあります");
+            return "redirect:/signup";
         }
     }
-
-
 
 }

@@ -71,9 +71,7 @@ public class SecurityConfig {
             .requestMatchers("/order_history_page").permitAll()
             .requestMatchers("/order_history").permitAll()
             .requestMatchers("/orderComplete").permitAll()
-            .requestMatchers("/orderForm.html").permitAll()
             .requestMatchers("/orderForm").permitAll()
-            .requestMatchers("/orderFormPage").permitAll()
             .requestMatchers("/store_info").permitAll()
             .requestMatchers("/store_info_page").permitAll()
             .requestMatchers("/user_info/{id}").permitAll()
@@ -84,8 +82,8 @@ public class SecurityConfig {
             .requestMatchers("/api/categories").permitAll()
             .anyRequest().authenticated()
         )
-        .authenticationProvider(authenticationProvider());
-        // .csrf().disable();
+        .authenticationProvider(authenticationProvider())
+        .csrf().disable();
         
         return http.build();
     }

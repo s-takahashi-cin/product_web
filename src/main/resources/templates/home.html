@@ -46,14 +46,13 @@
     </style>
   </head>
   <body>
-    <body>
-      <div th:if="${user != null}">
-        <p>ようこそ、<span th:text="${user.lastName}"></span>さん！</p>
-      </div>
-      <div th:if="${user != null and user.authorityId != null}">
-        <p th:text="'ユーザーの権限ID: ' + ${user.authorityId}"></p>
-      </div>
-    </body>
+    <div th:if="${user != null}">
+      <p>ようこそ、<span th:text="${user.lastName}"></span>さん！</p>
+      <p
+        th:if="${user.authorityId} == 1"
+        th:text="'ユーザーの権限ID: ' + ${user.authorityId}"
+      ></p>
+    </div>
 
     <div class="grid-container">
       <div class="grid-item" th:if="${user}">
