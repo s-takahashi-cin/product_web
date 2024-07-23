@@ -33,9 +33,8 @@ public class LoginController {
     public String signin(@ModelAttribute LoginForm form, RedirectAttributes redirectAttributes, HttpSession session) {
         String email = form.getEmail();
         String password = form.getPassword();
-        System.out.println("ログイン用のメールア11ドレス: " + email);
         String message = userService.authenticateUser(email, password);
-        if (message.equals("Authenticated User")) {
+        if (message != null && message.equals("Authenticated User")) {
             UserData user = userService.getUserInfo(email);
             session.setAttribute("user", user);
             redirectAttributes.addFlashAttribute("successMessage", "Logged in successfully!"); 

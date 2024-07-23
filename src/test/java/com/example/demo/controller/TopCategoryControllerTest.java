@@ -25,13 +25,4 @@ public class TopCategoryControllerTest {
             .andExpect(status().isOk())
             .andExpect(view().name("top_categories"));
     }
-
-    // @Test
-    // @WithMockUser(username = "testuser", roles = {"USER"})
-    // public void testShowMidCategoriesPage() throws Exception {
-    //     Long categoryId = 1L;
-    //     mockMvc.perform(MockMvcRequestBuilders.get("/mid_categories_page/" + categoryId))
-    //         .andExpect(status().isOk())
-    //         .andExpect(view().name("mid_categories"));
-    // }
 }

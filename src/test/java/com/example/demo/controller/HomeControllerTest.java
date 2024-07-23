@@ -69,7 +69,7 @@ public class HomeControllerTest {
         user.setEmail("user@example.com");  // getUsername() は email を返す
 
         mockMvc.perform(MockMvcRequestBuilders.get("/home")
-                .sessionAttr("user", user))  // セッションにユーザーをセット
+                .sessionAttr("user", user))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("home"))
                 .andExpect(MockMvcResultMatchers.model().attribute("user", user));

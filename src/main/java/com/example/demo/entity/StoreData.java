@@ -22,6 +22,12 @@ public class StoreData {
 
     public StoreData() {
     }
+    
+    public StoreData(Long id, String name, String address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
 
     public StoreData(String name) {
         this.name = name;
